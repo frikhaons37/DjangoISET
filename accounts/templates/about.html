@@ -1,0 +1,76 @@
+{% extends "profileLayout.html" %}
+
+{% block content %}
+<style>
+    .profile-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    h2 {
+        color: #333;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    h4 {
+        color: #c31e6b;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #ccc;
+        margin: 30px 0;
+    }
+</style>
+<div class="profile-content">
+    {% if checker.is_self == False %}
+    <h2>A propos {{account.userprofile.first_name}}:</h2>
+    {% else %}
+    <h2>A propos {{user.userprofile.first_name}}:</h2>
+    {% endif %}
+    <br>
+
+    {% if checker.is_self == False %}
+    <h4 class="profile-about" style="color:#c31e6b;">Pays: </h4>
+    {{account.userprofile.country}}
+    {% else %}
+    <h4 class="profile-about"style="color:#c31e6b;">Pays: </h4>
+    {{user.userprofile.country}}
+    {% endif %}
+
+    <br>
+    <br>
+    {% if checker.is_self == False %}
+    <h4 class="profile-about"style="color:#c31e6b;">Date De Naissance: </h4>
+    {{account.userprofile.birthdate}}
+    {% else %}
+    <h4 class="profile-about"style="color:#c31e6b;">Date De Naissance: </h4>
+    {{user.userprofile.birthdate}}
+    {% endif %}
+    <br>
+
+    <br>
+    <br><br>
+    <hr>
+    
+
+</div>
+{% endblock %}

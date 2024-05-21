@@ -1,0 +1,22 @@
+{% extends "layout.html"%} {% block body %} {% comment %}
+<div class="col-sm-8 mycard" style="border-radius: 10px;">
+  {% endcomment %}
+  <div class="post-topbar p-5 m-5" style="width: 80%;border-radius: 15px;">
+    
+    <h3 class="d-flex justify-content-center" style="color: rgb(216, 11, 100);">{{group.name}} Membres</h3>
+    {% for user in users %}
+    <div class="mycard">
+      {% if user.userprofile.avatar %}
+      <img
+        class="m-1 rounded-circle"
+        src="/images/{{user.userprofile.avatar}}"
+      />
+      {% else%}
+      <img class="m-1 rounded-circle" src="/images/avatars/profile.jpeg" />
+      {%endif%} {{user.username}}
+    </div>
+    {% endfor %}
+  </div>
+  {% comment %}
+</div>
+{% endcomment %} {%endblock%}

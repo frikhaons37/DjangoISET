@@ -1,0 +1,42 @@
+{% extends "layout.html"%} 
+{% block body %}
+<style>
+  body{
+    background-color: rgb(253, 248, 248);
+  }
+</style>
+<div class="container">
+  <div class="row pt-5">
+    <div class="col-sm-4">
+      <div class="mycard" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: #f0f8ff; padding: 20px;">
+        <form action="" method="GET">
+          <input type="text" name="q" id="" class="post_input" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Chercher un groupe" />
+          <input type="submit" class="btn mt-2" style="width: 100%; padding: 10px; background-color: #4caf50; color: white; border: none; border-radius: 5px;" value="Chercher" />
+        </form>
+        <button type="button" class="btn btn-outline-danger" style="width: 100%; padding: 10px; margin-top: 10px; border: 2px solid; border-radius: 5px;" onclick="location.href='{% url "create" %}';">
+         Créer un groupe</button>
+      </div>
+    </div>
+
+    <div class="col-sm-8">
+      <h3 style="color: #2c3e50; font-family: 'Arial Black', Gadget, sans-serif; font-size: 40px; text-shadow: 2px 2px #ecf0f1;">Les Groupes</h3>
+
+      <div class="mycard container" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: #fafafa; padding: 20px;">
+        <div class="row pl-5">
+          {% for group in groups %}
+          <div
+            style="background-image: {% if group.cover  %} url({{group.cover.url}}){% else %}url(/images/Default.jpg){% endif %}; width: 220px; height: 220px; display: inline-block; background-size: cover; cursor: pointer; border-radius: 15px; position: relative; overflow: hidden; margin: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+            onclick="location.href='{% url "show" group.id %}';" class="col-md-3 m-2">
+            
+            <div style="position: absolute; bottom: 0; background: rgba(0, 0, 0, 0.5); color: white; width: 100%; text-align: center; padding: 10px;">
+              <h2 style="font-size: 1.2em; margin: 0;">{{group.name}}</h2>
+              <p style="font-size: 0.9em; margin: 0;">{{group.description}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

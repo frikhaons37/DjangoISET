@@ -1,0 +1,112 @@
+{% extends "layout.html"%}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<style>
+    /* Style du formulaire */
+    form {
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        max-width: 1200px;
+        background-color: #f9f9f9;
+    }
+
+    /* Style des champs */
+    form input[type="text"],
+    form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Style du bouton */
+    form button {
+        padding: 10px 20px;
+        background-color: #d80e6d;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Style des div pour chaque champ spécifique */
+    #transport-fields,
+    #logement-fields,
+    #stage-fields,
+    #evenement-fields {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+</style>
+<div class="container">
+    <h1 style="color: rgb(0, 0, 0); font-family: 'Arial', sans-serif;">Modification du poste</h1>
+    <form action="{% url "edit" data.id %}" method="post">
+        {% csrf_token %}
+        {{form.content}}
+        {{form.image}}
+        {{form.poste_type}}
+        {{ form.poste_modele }}
+        <div id="transport-fields" style="display: none;" >
+            Départ: {{ form.depart }}<br>
+            Destination: {{ form.destination }}<br>
+            L'heure de départ: {{ form.heure_depart }}<br>
+            Le nombre de siège: {{ form.nombre_sieges }}<br>
+            Le contact info de transport: {{ form.contact_info_transport }}
+        </div>
+        <div id="logement-fields" style="display: none;" >
+            La localisation: {{ form.localisation }}<br>
+            La description de logement: {{ form.description_logement }}<br>
+            Le contact info de logement: {{ form.contact_info_logement }}
+        </div>
+        <div id="stage-fields" style="display: none;" >
+            Le type de stage: {{ form.type_stage }}<br>
+            La Société{{ form.societe }}<br>
+            La durée: {{ form.duree }}<br>
+            Le sujet: {{ form.sujet }}<br>
+            Le contact info de stage: {{ form.contact_info_stage }}<br>
+            La spécialité: {{ form.specialiste }}
+        </div>
+        <div id="evenement-fields" style="display: none;" >
+            Intitulé: {{ form.intitule }}<br>
+            La description d'événement: {{ form.description_evenement }}<br>
+            Le lieu: {{ form.lieu }}<br>
+            Le contact info d'évenement: {{ form.contact_info_evenement }}
+        </div>        <button type="submit">Enregistrer </button>
+    </form>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const posteModeleSelect = document.querySelector("#id_poste_modele");
+        const transportFields = document.querySelector("#transport-fields");
+        const logementFields = document.querySelector("#logement-fields");
+        const stageFields = document.querySelector("#stage-fields");
+        const evenementFields = document.querySelector("#evenement-fields");
+
+        posteModeleSelect.addEventListener("change", function() {
+            const selectedModele = posteModeleSelect.value;
+            transportFields.style.display = "none";
+            logementFields.style.display = "none";
+            stageFields.style.display = "none";
+            evenementFields.style.display = "none";
+
+            if (selectedModele === "transport") {
+                transportFields.style.display = "block";
+            } else if (selectedModele === "logement") {
+                logementFields.style.display = "block";
+            } else if (selectedModele === "stage") {
+                stageFields.style.display = "block";
+            } else if (selectedModele === "evenement") {
+                evenementFields.style.display = "block";
+            }
+        });
+    });
+</script>
+{% endblock %}

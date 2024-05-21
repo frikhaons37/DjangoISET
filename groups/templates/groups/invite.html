@@ -1,0 +1,40 @@
+{% extends "layout.html"%} {% block body %}
+
+{% load static %}
+<div class="container post-topbar p-5 m-5 text-center" style="width: 80%;border-radius: 10px;">
+  <h3 style="color:rgba(220, 20, 90, 0.818)">Invitez Vos Amis</h3>
+  <div class="d-flex justify-content-between">
+    <div class="mycard" style="border-radius: 10px;color: rgba(220, 20, 90, 0.818);">
+      <h4> Invitations</h4>
+      {%for alreadyInvitedUser in alreadyInvitedUsers%}
+      <div class="mycard"style="border-radius: 10px;">
+        {% if alreadyInvitedUser.inviteTo.userprofile.avatar %}
+        <img class="m-1 rounded-circle" src="/images/{{alreadyInvitedUser.inviteTo.userprofile.avatar}}" />
+        {% else%}
+        <img class="m-1 rounded-circle" src="/images/avatars/profile.jpeg" />
+        {%endif%} {{alreadyInvitedUser.inviteTo.username}}
+      </div>
+      {%endfor%}
+    </div>
+    <form method="POST" name="formSelect" enctype="multipart/form-data" action="{% url 'group.sendrequest' id %}"
+      multiple style="width:50%" class="mycard" style="border-radius: 10px;">
+      {% csrf_token %}
+      <h4> Envoyez des invitations !</h4>
+      <select name="groupRequest" id="groupRequest" class="picker" multiple style="width:100%">
+        {% for invite in invites %}
+        <option value="{{invite.id}}" class="mycard" style="width: 100%">
+          {% if invite.avatar %}
+          <img class="m-1 rounded-circle" src="/images/{{invite.UserProfile.avatar}}" />
+          {% else%}
+          <img class="m-1 rounded-circle" src="/images/avatars/profile.jpeg" />
+          {%endif%} {{invite.username}}
+        </option>
+        {% endfor %}
+      </select>
+      </br>
+      <input type="submit" id="Testing" value="Invite" class="btn btn-info px-5" style="width:100%" disabled>
+    </form>
+  </div>
+</div>
+
+{%endblock%}

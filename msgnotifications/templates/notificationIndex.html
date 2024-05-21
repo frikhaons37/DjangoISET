@@ -1,0 +1,130 @@
+{% extends "layout.html"%}
+{% block body %}
+{% load static %}
+
+<style>
+    /* Style général */
+    .container {
+        margin-top: 50px; /* Espace au-dessus du conteneur de notifications */
+    }
+
+    .notification {
+        background-color: #f8f9fa; /* Couleur de fond */
+        border-radius: 10px; /* Coins arrondis */
+        padding: 15px; /* Espacement interne */
+        margin-bottom: 20px; /* Espacement entre les notifications */
+    }
+
+    .notification a {
+        text-decoration: none; /* Supprimer les soulignements des liens */
+        color: black; /* Couleur du texte */
+    }
+
+    .notification a:hover {
+        text-decoration: underline; /* Soulignement au survol */
+    }
+
+    .notification-date {
+        color: gray; /* Couleur du texte de la date */
+        font-size: 12px; /* Taille de la police de la date */
+    }
+
+    .notification-icon {
+        font-size: 24px; /* Taille de la police des icônes */
+        margin-right: 10px; /* Marge à droite des icônes */
+    }
+
+    /* Styles spécifiques pour différents types de notifications */
+    .comment-notification {
+        background-color: #d4edda; /* Couleur de fond pour les notifications de commentaire */
+    }
+
+    .group-notification {
+        background-color: #cce5ff; /* Couleur de fond pour les notifications de groupe */
+    }
+
+    .request-notification {
+        background-color: #f8d7da; /* Couleur de fond pour les notifications de demande */
+    }
+
+    .profile-notification {
+        background-color: #fff3cd; /* Couleur de fond pour les notifications de profil */
+    }
+
+    .like-notification {
+        background-color: #d1ecf1; /* Couleur de fond pour les notifications de like */
+    }
+
+    .reservation-notification {
+        background-color: #f2e8fc; /* Couleur de fond pour les notifications de réservation */
+    }
+</style>
+
+<div class="container">
+    <div class="row pt-5">
+        <!---------------------------------------------------- side ------------------------------------------------------------>
+        <div class="col-sm-8">
+            <div class="mycard post-topbar" style="height:750px;overflow-y:scroll;">
+                {% for notification in notifications %}
+                {% if notification.notifyType == "postView_comment"%}
+                <a href="{% url "view" notification.instance_id%}" style="color:black;">
+                    <div class="notification comment-notification">
+                        <p class="notification-date">{{notification.created_at}}</p>
+                        <div class="notification-icon"><i class="fa fa-comments fa-2x m-1 rounded-circle" aria-hidden="true"></i></div>
+                        <div>{{notification.text}}</div>
+                    </div>
+                </a>
+                {% endif %}
+                {% if notification.notifyType == "groupView"%}
+                <a href="{% url "show" notification.instance_id%}" style="color:black;">
+                    <div class="notification group-notification">
+                        <p class="notification-date">{{notification.created_at}}</p>
+                        <div class="notification-icon"><i class="fa fa-users fa-2x m-1 rounded-circle" aria-hidden="true"></i></div>
+                        <div>{{notification.text}}</div>
+                    </div>
+                </a>
+                {% endif %}
+                {% if notification.notifyType == "groupRequest"%}
+                <a href="/groups/request/{{notification.instance_id}}" style="color:black;">
+                    <div class="notification request-notification">
+                        <p class="notification-date">{{notification.created_at}}</p>
+                        <div class="notification-icon"><i class="fa fa-users fa-2x m-1 rounded-circle" aria-hidden="true"></i></div>
+                        <div>{{notification.text}}</div>
+                    </div>
+                </a>
+                {% endif %}
+                {% if notification.notifyType == "profileView"%}
+                <a href="/profile/{{notification.instance_id}}" style="color:black;">
+                    <div class="notification profile-notification">
+                        <p class="notification-date">{{notification.created_at}}</p>
+                        <div class="notification-icon"><i class="fas fa-user-plus fa-2x m-1 rounded-circle" aria-hidden="true"></i></div>
+                        <div>{{notification.text}}</div>
+                    </div>
+                </a>
+                {% endif %}
+                {% if notification.notifyType == "postView_like"%}
+                <a href="{% url "view" notification.instance_id%}" style="color:black;">
+                    <div class="notification like-notification">
+                        <p class="notification-date">{{notification.created_at}}</p>
+                        <div class="notification-icon"><i class="fas fa-thumbs-up fa-2x m-1 rounded-circle" aria-hidden="true"></i></div>
+                        <div>{{notification.text}}</div>
+                    </div>
+                </a>
+                {% endif %}
+                {% if notification.notifyType == "postView_Reservation"%}
+                <a href="{% url "view" notification.instance_id%}" style="color:black;">
+                    <div class="notification reservation-notification">
+                        <p class="notification-date">{{notification.created_at}}</p>
+                        <div class="notification-icon"><i class="fas fa-thumbs-up fa-2x m-1 rounded-circle" aria-hidden="true"></i></div>
+                        <div>{{notification.text}}</div>
+                    </div>
+                </a>
+                {% endif %}
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

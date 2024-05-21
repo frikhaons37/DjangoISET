@@ -1,0 +1,173 @@
+{% extends "profileLayout.html" %}
+{% block content %}
+<div class="profile-content">
+
+	<h3 style="color:#c31e6b;">Les postes</h3>
+	{% if checker.is_self %}
+	<div class="post-topbar">
+		<form action='{% url "index" %}' method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-10">
+					{{ form.as_p}}
+					<input class="post_input " name="content" placeholder="  Publiez maintenant" />
+					<input class="mt-2 " type="file" name="image" />
+
+				</div>
+				<div class="col-2">
+					<button class="post btn" type="submit" style="background-color:#c31e6b;">Publier</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	{% endif %}
+<!---->
+	{% if posts %}
+	{% for post in posts %}
+	<hr>
+	<div class="card text-center">
+		<div class="card-header">
+			<div class="row" style="text-align:left;">
+				<p class="col-7 tex-left "><span style="color:#c31e6b;">Publié par:</span> {{post.owner}}
+					{% if post.group != null %}
+					<span style="color:#c31e6b;"> >> from group:</span> {{post.group }}
+					{% endif %}
+				</p>
+
+				<div class="col-5" style="text-align:right;">
+					<a href="{% url 'view' post.id%}" style="color:grey;" class="mx-3"><i class="fa fa-eye"
+							aria-hidden="true"></i></a>
+					{% if post.owner == request.user %}
+					<a href="{% url 'edit' post.id%}" style="color:grey;" class="mx-3"><i class="fa fa-pen"
+							aria-hidden="true"></i></a>
+					<a href="{% url 'delete' post.id%}" style="color:grey;" class="mx-3"><i class="fa fa-trash"
+							aria-hidden="true"></i></a>
+					{% endif %}
+				</div>
+
+			</div>
+		</div>
+		<div class="card-body">
+			<h5 class="card-text">{{post.content}}</h5>
+			<p>Le type du poste: {{post.poste_type}}</p>
+			<p id="modele" >C'est une poste : {{ post.poste_modele }}</p>
+			<!-- Champs spécifiques au transport avec un identifiant unique -->
+{% if post.poste_modele == "transport" %}
+<div id="transport">
+    <p>Départ: {{ post.depart }}</p>
+    <p>Destination: {{ post.destination }}</p>
+    <p>Heure de départ: {{ post.heure_depart }}</p>
+    <p>Nombre de sièges: {{ post.nombre_sieges }}</p>
+    <p>Infos de contact transport: {{ post.contact_info_transport }}</p>
+</div>
+{% endif %}
+
+<!-- Champs spécifiques au logement avec un identifiant unique -->
+{% if post.poste_modele == "logement" %}
+<div>
+    <p>Localisation: {{ post.localisation }}</p>
+    <p>Description du logement: {{ post.description_logement }}</p>
+    <p>Infos de contact logement: {{ post.contact_info_logement }}</p>
+</div>
+{% endif %}
+
+<!-- Champs spécifiques au stage avec un identifiant unique -->
+{% if post.poste_modele == "stage" %}
+<div>
+    <p>Type de stage: {{ post.type_stage }}</p>
+    <p>Société: {{ post.societe }}</p>
+    <p>Durée: {{ post.duree }}</p>
+    <p>Sujet: {{ post.sujet }}</p>
+    <p>Infos de contact stage: {{ post.contact_info_stage }}</p>
+    <p>Spécialiste: {{ post.specialiste }}</p>
+</div>
+{% endif %}
+
+<!-- Champs spécifiques à l'événement avec un identifiant unique -->
+{% if post.poste_modele == "evenement" %}
+<div>
+    <p>Intitulé: {{ post.intitule }}</p>
+    <p>Description de l'événement: {{ post.description_evenement }}</p>
+    <p>Lieu: {{ post.lieu }}</p>
+    <p>Infos de contact événement: {{ post.contact_info_evenement }}</p>
+</div>
+{% endif %}
+
+
+			{% if post.image != null and post.image != ""%}
+			<img src="/images/{{post.image }}" width="400px" />
+			{% endif %}
+
+		</div>
+		<div class="card-footer text-muted d-flex">
+			<p style="text-align:left;color:gray;font-size:12px;margin:0px">{{post.created_at}}</p>
+			<div style="text-align:right;width:80%">
+				<a href="{% url 'view' post.id%}" style="color:#c31e6b;"><i class="fa fa-comment mx-4 fa-lg "
+						aria-hidden="true"></i></a>
+						<form action="{% url 'like-post' %}" method="POST" style="display: inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{post.id}}">
+
+                            {% if request.user not in post.liked.all %}
+   
+                            <button type="submit" style="background-color: #f8f9fa;color:#f8f9fa">
+                            <span id="likeButton" style="cursor: pointer;">
+                                <ion-icon name="heart-outline" style="color: rgb(196, 21, 102); font-size: 30px;"></ion-icon>
+                            </span></button>
+                            
+                            {% else %}
+
+                            <button type="submit" style="background-color: #f8f9fa; color:#f8f9fa">
+                                <span id="likeButton" style="cursor: pointer; background-color:#f8f9fa; padding: 5px; border-radius: 50%;">
+                                  <ion-icon name="heart" style="color:rgb(196, 21, 102) ; font-size: 30px;"></ion-icon>
+                                </span>
+                              </button>
+                            {% endif %}
+
+                        </form>
+				<p>{{ post.liked.all.count }} likes</p>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+
+	{% endfor %}
+	{% elif checker.is_self == True %}
+	<h3>Vous n'avez pas des postes</h3>
+	<h4>Publiez maintenant une poste</h4>
+
+	{% elif checker.is_friend == False %}
+	<h3>Vous ne pouvez pas consulter ce profile</h3>
+	<h4>Ajoutez</h4>
+	{% else %}
+	<h3>Cet utilisateur n'a pas encore publié une poste</h3>
+	{% endif %}
+</div>
+
+
+
+  <!--
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <script>
+    const likeButton = document.getElementById("likeButton");
+
+    let liked = false;
+
+    likeButton.addEventListener("click", () => {
+        if (liked) {
+            likeButton.innerHTML = '<ion-icon name="heart-outline" style="color: rgb(196, 21, 102); font-size: medium; "></ion-icon>';
+            liked = false;
+        } else {
+            likeButton.innerHTML = '<ion-icon name="heart" style="color: rgb(196, 21, 102); font-size: medium;"></ion-icon>';
+            liked = true;
+        }
+    });
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,118 @@
+{% extends "profileLayout.html" %}
+{% block content %}
+<style>
+	body{
+		background-color: white;
+	}
+    .profile-image {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-title {
+        color: #333;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .card-subtitle {
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .profile-link {
+        color: #c31e6b;
+        text-decoration: none;
+    }
+
+    .profile-link:hover {
+        text-decoration: underline;
+    }
+
+    .message-btn {
+        background-color: #c31e6b;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .message-btn:hover {
+        background-color: #a81e5b;
+    }
+
+    .no-friends {
+        color: #c31e6b;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+    }
+	.title {
+        color: #c31e6b;
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        position: relative;
+    }
+
+    .title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background-color: #c31e6b;
+        margin: 10px auto 0;
+        border-radius: 3px;
+    }
+</style>
+
+<div class="container">
+    <h2 class="title">Amis de {{ user.username }}:</h2>
+    <hr>
+    {% if friends|length > 0 %}
+    <div class="row">
+        {% for friend in friends %}
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <img class="card-img-top profile-image" src="{% if friend.userprofile.avatar %}{{ friend.userprofile.avatar.url }}{% else %}/images/avatars/profile.jpeg{% endif %}" alt="">
+                <div class="card-body">
+                    <a href="/profile/{{ friend.userprofile.user_id }}" class="profile-link">
+                        <h4 class="card-title">{{ friend.username|truncatechars:20 }}</h4>
+                        <p class="card-subtitle">{{ friend.first_name }} {{ friend.last_name|truncatechars:20 }}</p>
+                    </a>
+                    <div class="d-flex justify-content-center">
+                        <a href="/messages/?id={{ friend.id }}" class="message-btn" style="text-decoration: none;">Envoyer un message</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h3 class="no-friends">Vous n'avez pas d'amis, ajoutez des amis d'abord.</h3>
+    {% endif %}
+</div>
+
+{% endblock %}

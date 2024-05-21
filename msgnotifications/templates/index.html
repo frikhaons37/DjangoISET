@@ -1,0 +1,222 @@
+{% extends "layout.html" %}
+{% block body %}
+{% load static %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .mycard {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .post-topbar h6 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .post-topbar hr {
+        border: none;
+        height: 1px;
+        background-color: #e0e0e0;
+        margin: 20px 0;
+    }
+
+    .post-topbar {
+        height: 450px;
+        overflow-y: scroll;
+    }
+
+    .post_input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        background-color: #c31e6b;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    .btn:hover {
+        background-color: #a81e5b;
+    }
+
+    .card {
+        border: none;
+        margin-bottom: 20px;
+    }
+
+    .card-body {
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .card-body.bg-light {
+        background-color: #f8f9fa;
+    }
+
+    .card-body.bg-light .card-text {
+        text-align: right;
+    }
+
+    .card-body:not(.bg-light) .card-text {
+        text-align: left;
+    }
+
+    .card-text span {
+        color: #c31e6b;
+    }
+
+    .card-text {
+        font-size: 16px;
+    }
+
+    .post-form {
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .side-section {
+        height: 560px;
+        overflow-y: scroll;
+    }
+
+    .side-section h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .side-section hr {
+        border: none;
+        height: 1px;
+        background-color: #e0e0e0;
+        margin: 10px 0;
+    }
+
+    .side-section a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .side-section .chatdiv {
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .side-section .chatdiv:hover {
+        background-color: #f0f2f5;
+    }
+
+    .rounded-circle {
+        border-radius: 50%;
+    }
+
+    .rounded-circle img {
+        width: 40px;
+        height: 40px;
+    }
+</style>
+
+<div class="container">
+    <div class="row pt-5">
+        <div class="col-sm-8 mycard d-flex flex-column" style="margin-top: -35px;"> 
+            <div class="post-topbar">
+                <h6>Parler Avec<span style="color:#c31e6b;"> :{{ msgto }}</span></h6>
+                <hr>
+                <div>
+                    {% for message in messages %}
+                    <div class="card text-center">
+                        {% if request.user == message.sender %}
+                        <div class="card-body bg-light">
+                            <h6 class="card-text">{{ message.text }}<span> :{{ message.sender }}</span></h6>
+                            <p style="text-align:left;color:gray;font-size:12px;margin:0px">{{ message.created_at }}</p>
+                        </div>
+                        {% else %}
+                        <div class="card-body">
+                            <h6 class="card-text"><span>{{ message.sender }}: </span>{{ message.text }}</h6>
+                            <p style="text-align:right;color:gray;font-size:12px;margin:0px">{{ message.created_at }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card p-2 post-form">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-10">
+                            {{ form.as_p }}
+                            <input class="post_input" name="text" placeholder="  Enter your message" />
+                        </div>
+                        <div class="col-2">
+                            <button class="btn" type="submit">Envoyer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            
+            <div class="mycard side-section" style="margin-top: -35px;" >
+                <h2>Conversations</h2>
+                {% for friend in newfriends %}
+                <hr>
+                {% if msgto == friend.friendObj.username %}
+                <a href="?id={{ friend.friendObj.id }}" style="color:black;">
+                    <div class="d-flex justify-content-center align-items-center chatdiv" style="background-color:#c31e6b;">
+                {% else %}
+                <a href="?id={{ friend.friendObj.id }}" style="color:black;">
+                    <div class="d-flex justify-content-center align-items-center chatdiv">
+                {% endif %}
+                        {% if friend.friendCounter != null and friend.friendCounter != 0 %}
+                        <p class="rounded-circle d-inline px-2 py-1" style="background-color:white;color:rgb(255, 0, 102);font-weight:bold;-webkit-text-stroke: 1px rgb(255, 0, 102);">
+                            {{ friend.friendCounter }}
+                        </p>
+                        {% endif %}
+                        <div class="mx-2">{{ friend.friendObj.username }}</div>
+                        <img class="m-1 rounded-circle" src="{% if friend.friendObj.userprofile.avatar %}{{ friend.friendObj.userprofile.avatar.url }}{% else %}{% static 'images/avatars/profile.jpeg' %}{% endif %}">
+                    </div>
+                </a>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

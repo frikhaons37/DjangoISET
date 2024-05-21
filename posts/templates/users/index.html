@@ -1,0 +1,219 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f2f5;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .mycard {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .post_input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #cccccc;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .btn {
+        background-color: #c31e6b;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+    }
+
+    .btn:hover {
+        background-color: #a81e5b;
+    }
+
+    h5, h6 {
+        font-family: 'Montserrat', sans-serif;
+        color: #333;
+    }
+
+    hr {
+        border: none;
+        height: 1px;
+        background-color: #e0e0e0;
+        margin: 20px 0;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #ffffff;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .d-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .profile-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+
+    .user-details {
+        display: flex;
+        align-items: center;
+    }
+
+    .no-results {
+        text-align: center;
+        color: #666;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .card {
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-title {
+        color: #333;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .card-subtitle {
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .profile-link {
+        color: #c31e6b;
+        text-decoration: none;
+    }
+
+    .profile-link:hover {
+        text-decoration: underline;
+    }
+
+    .message-btn {
+        background-color: #c31e6b;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .message-btn:hover {
+        background-color: #a81e5b;
+    }
+
+    .no-friends {
+        color: #c31e6b;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .title {
+        color: #c31e6b;
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        position: relative;
+    }
+
+    .title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background-color: #c31e6b;
+        margin: 10px auto 0;
+        border-radius: 3px;
+    }
+</style>
+
+<div class="container">
+    <div class="row pt-5">
+        <div class="col-sm-4">
+            <div class="mycard">
+                <form action="" method="GET">
+                    <input type="text" name="q" id="" class="post_input" placeholder="Rechercher un utilisateur par nom"
+                        value="{{query}}">
+                    <input type="submit" class="btn mt-2" value="Rechercher">
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="mycard">
+                {% if usersResult %}
+                {% for user in usersResult %}
+                <div class="user-details">
+                    <img class="profile-image" src="{% if user.userprofile.avatar %}{{ user.userprofile.avatar.url }}{% else %}/images/avatars/profile.jpeg{% endif %}" alt="">
+                    <div>
+                        <h5>{{ user.userprofile.first_name }} {{ user.userprofile.last_name }}</h5>
+                        <h6>Nom: {{ user.username }}</h6>
+                        <div class="d-flex">
+                            <a class="btn-secondary btn" href="/profile/{{ user.id }}" style="height: 50px;width: 200px; margin-top: -3px;
+                            margin-left: 230px;
+                            position: absolute;"><i class="fas fa-user"></i> Consulter Profil</a>
+                            <a class="btn" href="/messages/?id={{ user.id }}" style="height: 50px;width: 200px;"><i class="fas fa-envelope"></i> Envoyer Message</a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+                {% else %}
+                <div class="no-results">
+                    <h3>Il n'y a pas de résultats..</h3>
+                    <h2>Essayez un autre nom.</h2>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

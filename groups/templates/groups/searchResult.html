@@ -1,0 +1,37 @@
+{% extends "groups/show.html"%}
+
+{% block content %}
+<div class="container">
+    <div class="row pt-5">
+        <div class="col-sm-4 ">
+            
+
+        </div>
+        <div class="col-sm-8">
+
+            <div class="mycard">
+                
+                {% if usersResult %}
+                {% for user in usersResult %}
+                <hr>
+                <h5>{{user.userprofile.first_name}} {{user.userprofile.last_name}}</h5>
+                <h6>UserName: {{user.username}}</h6>
+                <div class="d-flex justify-content-space-beween" style="width:100%">
+                    <a class="btn-secondary btn" href="/profile/{{user.id}}"><i class="fas fa-user"></i> View Profile</a>
+                    <a class="post btn py-2" style="padding-top: 5px; color: honeydew;" href="/messages/?id={{ user.id }}"><i class="fas fa-envelope"></i> Send
+                        Message</a>
+
+                </div>
+                <hr>
+                {% endfor %}
+                {% else %}
+                <h3>Pas de résultat.. </h3>
+                <h2>Recherchez un autre nom .</h2>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

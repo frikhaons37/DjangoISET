@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+    }
+
+    h3 {
+        color: #cb1f61;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 40px;
+        margin-bottom: 40px;
+    }
+   
+    label {
+        color: #3aa0e4;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .alert-danger {
+        background-color: #ffe5e5;
+        color: #b80000;
+        border: 1px solid #ffb3b3;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+    }
+
+    .btn {
+        background-color: #c31e6b;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        font-size: 18px;
+    }
+
+    .btn:hover {
+        background-color: #a81e5b;
+    }
+</style>
+
+<div>
+    <center>
+        <h3>Création Du Groupe</h3>
+    </center>
+</div>
+<center>
+    <div class="container">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'create' %}">
+            {% csrf_token %}
+            <label for="{{ form.name.id_for_label }}">Nom du groupe:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+            <div class="alert alert-danger mt-6 mb-2" role="alert">
+                {{ form.name.errors }}
+            </div>
+            {% endif %}
+            
+            <label for="{{ form.privacy.id_for_label }}">Le groupe est:</label>
+            {{ form.privacy }}
+            {% if form.privacy.errors %}
+            <div class="alert alert-danger mt-6 mb-2" role="alert">
+                {{ form.privacy.errors }}
+            </div>
+            {% endif %}
+            
+            <label for="{{ form.description.id_for_label }}">Description:</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+            <div class="alert alert-danger mt-6 mb-2" role="alert">
+                {{ form.description.errors }}
+            </div>
+            {% endif %}
+            
+            <label for="{{ form.cover.id_for_label }}">La couverture du groupe:</label>
+            {{ form.cover }}
+            {% if form.cover.errors %}
+            <div class="alert alert-danger mt-6 mb-2" role="alert">
+                {{ form.cover.errors }}
+            </div>
+            {% endif %}
+            
+            <button type="submit" class="btn btn-outline-danger">Créer</button>
+        </form>
+    </div>
+</center>
+{% endblock %}

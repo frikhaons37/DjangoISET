@@ -1,0 +1,22 @@
+{% extends "layout.html"%}
+{% load crispy_forms_tags %}
+
+{% block title %}Commentaire sur la poste {% endblock %}
+
+{% block body %}
+<div class="container">
+    <br>
+    <h3 style="color:#c31e6b;">Ajoutez un nouveau commentaire</h3>
+    <hr>
+
+    <form action='{% url "add_comment"  post.id%}' method="post">
+        {% csrf_token %}
+        {{ form|crispy}}
+
+        <button class="comment-btn" type="submit">Ajoutez</button>
+
+    </form>
+
+</div>
+
+{% endblock %}

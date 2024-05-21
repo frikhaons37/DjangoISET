@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% load static %}
+{% load crispy_forms_tags %}
+<html>
+
+<head>
+    <title>Plateforme ISET</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/posts.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/profile.css'%}" type="text/css">
+    <title> signup </title>
+<style>
+    body{
+        background-image:url(/static/images/login_image.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        opacity: 0.99;
+    }
+    .post-topbar {
+        border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    
+    padding: 20px;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    opacity: 20;
+    filter: alpha(opacity=50);
+    border-top: none;
+}
+a#navLink {
+    color: blue;
+}
+input#id_email, input#id_first_name,input#id_last_name,input#id_password1,input#id_password2,
+input#id_birthdate,input#id_country,input#id_username {
+    width: 400px;
+    margin-left: 290px;
+}
+p#error_1_id_email,p#error_1_id_first_name,p#error_1_id_last_name,p#error_1_id_birthdate{
+    margin-top: -28px;
+    position: absolute;
+    color: #aa0647e1;
+
+}
+small.form-text.text-muted{
+    margin-left: 290px;
+}
+div#div_id_avatar,label{
+    margin-left: 290px;
+}
+strong{
+    margin-left:700px;
+}
+label.requiredField,small#hint_id_username,small#hint_id_password2{
+    margin-left: 290px;
+}
+li{
+    position: relative;
+    margin-left: 0px;
+}
+textarea#id_about {
+    width: 45%;
+    height: fit-content;
+    margin-left: 290px;
+}
+input[type="submit"]{
+    padding: 10px;
+    width: 16pc;
+    margin-left: 350px;
+    background-color: #3897f0;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+input[type="submit"]:hover{
+    background-color: #3578e5;
+}
+
+.links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.links a {
+    color:  #003569;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body style="overflow-x:hidden">    
+    <img src="/static/images/iset_logo.png" alt="" style="position: absolute; width: 13%; height: 19%;"> 
+    <div class="container pt-2 ">
+        <div class="post-topbar">
+            <h2 style="color: #000000; font-family: 'Arial Black', Gadget, sans-serif; font-size: 40px; text-shadow: 2px 2px #ecf0f1;"><center>Sign Up Maintenant</center> </h2>
+            <form method="post" action="{% url "signup" %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ profile_form.non_field_errors }}
+                {{ form.username|as_crispy_field}}
+                {{ profile_form.email|as_crispy_field }}
+                {{ profile_form.first_name|as_crispy_field}}
+                {{ profile_form.last_name|as_crispy_field}}
+                {{ form.password1|as_crispy_field}}
+                {{ form.password2|as_crispy_field}}
+                {{ profile_form.avatar|as_crispy_field}}
+                {{ profile_form.birthdate|as_crispy_field}}
+                <small class="form-text text-muted">Format: dd/mm/yyy </small>
+                {{ profile_form.country|as_crispy_field}}
+                {{ profile_form.about|as_crispy_field}}
+                <input type="submit" name="submit" value="Register" />
+            </form>
+        </div>
+        <p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+
+
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://
+</html>

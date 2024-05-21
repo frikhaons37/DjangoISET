@@ -1,0 +1,383 @@
+{% extends "layout.html"%}
+{% block style %}
+<style>
+    label {
+        display: none
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    textarea {
+        float: left;
+        width: 100%;
+        height: 60px;
+        border: 1px solid #c81559;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+{% endblock %}
+{% block body %}
+<div
+    style=" background-image: {% if group.cover  %} url({{group.cover.url}}){% else %}url(/images/Default.jpg){% endif %};width:100%%;height:300px;background-size: 100% 300px;cursor: pointer;background-repeat: no-repeat;">
+</div>
+<div class="d-flex justify-content-between" style="background-color:#3aa0e4; padding:10px;color: white;">
+    <div class="">
+        <h1>{{group.name}}</h1>
+        <h3>{{group.description}}</h3>
+    </div>
+    <div class="d-flex align-items-end">
+        {%if request.user in users_in_group or request.user == group.owner%}
+        <a href="{% url "listMembers" group.id %}"><i class="fa fa-users fa-2x m-3" aria-hidden="true"
+                style="color:white"></i></a>
+        <a href="{% url "invite" group.id %}"><i class="fas fa-user-plus fa-2x m-3" aria-hidden="true"
+                style="color:white"></i></a>
+        {%if request.user == group.owner%}
+        <a href="{% url "group.request" group.id %}"><i class="fas fa-user-check fa-2x m-3" aria-hidden="true"
+                style="color:white"></i></a>
+        <a href="{% url "leave" group.id %}"><i class="fa fa-trash fa-2x m-3" aria-hidden="true"
+                style="color:white"></i></a>
+        {%else%}
+        <a href="{% url "leave" group.id %}"><i class="fas fa-door-open fa-2x m-3" aria-hidden="true"
+                style="color:white"></i></a>
+        {%endif%}
+        {%endif%}
+    </div>
+</div>
+
+<div class="container">
+    {%if request.user in users_in_group or request.user == group.owner%}
+
+    <div class="row pt-1">
+
+        <div class="col-sm-4 ">
+
+            <div class="mycard">
+                <form action="" method="GET">
+                    <input type="text" name="q" id="" class="post_input " placeholder="Chercher un utilisateur ...">
+                    <input type="submit" class="btn mt-2" value="Chercher" style="background-color: #d41889fa;color:white;"></a>
+                </form>
+            </div>
+
+            {% comment %} <div class="mycard">
+                <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+                <h2>your groups</h2>
+
+                {% for group in groups %}
+                <hr>
+                <h5>{{group.name}}</h5>
+                <div class="d-flex pl-3">
+                    <p><button class="mx-2">visit group</button></p>
+                    <p><button class="mx-2" style="background-color:grey">Quittez le groupe</button></p>
+                </div>
+
+                <hr>
+                {% endfor %}
+
+
+            </div> {% endcomment %}
+
+
+        </div>
+
+
+        <!-- ----------------------------------------------------------- end side ----------------------------------- -->
+
+        <div class="col-sm-8 mycard">
+
+
+            <div class="post-topbar">
+
+                <form action='' method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-10">
+
+                    {{form.content}}
+                    {{form.image}}
+                    {{form.poste_type}}<br>
+                    Le type de poste: {{ form.poste_modele }}<br>
+                    Le nombre de personnes à reserver: {{form.nombre_pers}}
+
+
+                    <div id="transport-fields" style="display: none;text-align: left;" >
+                        Départ: {{ form.depart }}<br>
+                        Destination: {{ form.destination }}<br>
+                        L'heure de départ: {{ form.heure_depart }}<br>
+                        Le nombre de siège: {{ form.nombre_sieges }}<br>
+                        Le contact info de transport: {{ form.contact_info_transport }}
+                    </div>
+                    <div id="logement-fields" style="display: none;text-align: left;">
+                        La localisation: {{ form.localisation }}<br>
+                        La description de logement: {{ form.description_logement }}<br>
+                        Le contact info de logement: {{ form.contact_info_logement }}
+                    </div>
+                    <div id="stage-fields" style="display: none;text-align: left;" >
+                        Le type de stage: {{ form.type_stage }}<br>
+                        La Société{{ form.societe }}<br>
+                        La durée: {{ form.duree }}<br>
+                        Le sujet: {{ form.sujet }}<br>
+                        Le contact info de stage: {{ form.contact_info_stage }}<br>
+                        La spécialité: {{ form.specialiste }}
+                    </div>
+                    <div id="evenement-fields" style="display: none;text-align: left;" >
+                        Intitulé: {{ form.intitule }}<br>
+                        La description d'événement: {{ form.description_evenement }}<br>
+                        Le lieu: {{ form.lieu }}<br>
+                        Le contact info d'évenement: {{ form.contact_info_evenement }}
+                    </div>
+ 
+
+                            {% if form.content.error %}
+                            <div id="form-error">
+                                {{form.content.errors.0}}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-2">
+                            <button class="post btn" type="submit" style="background-color:#db1c72;">Publier</button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+            
+
+            <h5>Les postes</h5>
+
+            {% for post in posts %}
+            <hr>
+
+            <div class="card text-center" style="margin-top: 10px;">
+                <div class="card-header">
+                    <div class="row" style="text-align:left;">
+                        <p class="col-7 tex-left "><span style="color:#c31e6b;">Publié par:</span> <a
+                                href="/profile/{{post.owner.id}}" style="color:black">{{post.owner}}</a>
+                            {% if post.group != null %}
+                            <span style="color:#db1c72;">Membre de:</span> {{post.group }}
+                            {% endif %}
+                        </p>
+
+                        <a href="{% url 'ajout_reservation' post.id %}" style="color:#c31e6b;font-weight: bold; margin-left: -69px;">Réserver</a>
+                        
+                        <div class="col-5" style="text-align:right;">
+                            <a href="{% url 'view' post.id%}" style="color:grey;" class="mx-3"><i class="fa fa-eye"
+                                    aria-hidden="true"></i></a>
+                            {% if post.owner == request.user %}
+                            <a href="{% url 'edit' post.id%}" style="color:grey;" class="mx-3"><i class="fa fa-pen"
+                                    aria-hidden="true"></i></a>
+                            <a href="{% url 'delete' post.id%}" style="color:grey;" class="mx-3"><i class="fa fa-trash"
+                                    aria-hidden="true"></i></a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-text">{{post.content}}</h5>
+
+                    <p>Le type du poste: {{post.poste_type}}</p>
+                    <p id="modele" >C'est une poste : {{ post.poste_modele }}</p>
+                    <p>Le nombre des personnes à reserver: {{post.nombre_pers}}</p>
+
+<!-- Champs spécifiques au transport avec un identifiant unique -->
+{% if post.poste_modele == "transport" %}
+<div id="transport">
+    <p>Départ: {{ post.depart }}</p>
+    <p>Destination: {{ post.destination }}</p>
+    <p>Heure de départ: {{ post.heure_depart }}</p>
+    <p>Nombre de sièges: {{ post.nombre_sieges }}</p>
+    <p>Infos de contact transport: {{ post.contact_info_transport }}</p>
+</div>
+{% endif %}
+
+<!-- Champs spécifiques au logement avec un identifiant unique -->
+{% if post.poste_modele == "logement" %}
+<div>
+    <p>Localisation: {{ post.localisation }}</p>
+    <p>Description du logement: {{ post.description_logement }}</p>
+    <p>Infos de contact logement: {{ post.contact_info_logement }}</p>
+</div>
+{% endif %}
+
+<!-- Champs spécifiques au stage avec un identifiant unique -->
+{% if post.poste_modele == "stage" %}
+<div>
+    <p>Type de stage: {{ post.type_stage }}</p>
+    <p>Société: {{ post.societe }}</p>
+    <p>Durée: {{ post.duree }}</p>
+    <p>Sujet: {{ post.sujet }}</p>
+    <p>Infos de contact stage: {{ post.contact_info_stage }}</p>
+    <p>Spécialiste: {{ post.specialiste }}</p>
+</div>
+{% endif %}
+
+<!-- Champs spécifiques à l'événement avec un identifiant unique -->
+{% if post.poste_modele == "evenement" %}
+<div>
+    <p>Intitulé: {{ post.intitule }}</p>
+    <p>Description de l'événement: {{ post.description_evenement }}</p>
+    <p>Lieu: {{ post.lieu }}</p>
+    <p>Infos de contact événement: {{ post.contact_info_evenement }}</p>
+</div>
+{% endif %}
+
+
+
+
+
+
+                    {% if post.image != null and post.image != ""%}
+                    <img src="/images/{{post.image }}" width="400px" />
+                    {% endif %}
+                    
+
+                </div>
+                <div class="card-footer text-muted d-flex">
+                    <p style="text-align:left;color:gray;font-size:12px;margin:0px">{{post.created_at}}</p>
+                    <div style="text-align:right;width:80%">
+                        <a href="{% url 'view' post.id%}" style="color:rgb(196, 21, 102);"><i class="fa fa-comment mx-4 fa-lg "
+                                aria-hidden="true"></i></a>
+                        <form action="{% url 'like-post' %}" method="POST" style="display: inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{post.id}}">
+
+                            {% if request.user not in post.liked.all %}
+   
+                            <button type="submit" style="background-color: #f8f9fa;">
+                            <span id="likeButton" style="cursor: pointer;">
+                                <ion-icon name="heart-outline" style="color: rgb(196, 21, 102); font-size: 30px;"></ion-icon>
+                            </span></button>
+                            
+                            {% else %}
+
+                            <button type="submit" style="background-color: #f8f9fa;">
+                                <span id="likeButton" style="cursor: pointer; background-color:#f8f9fa; padding: 5px; border-radius: 50%;">
+                                  <ion-icon name="heart" style="color:rgb(196, 21, 102) ; font-size: 30px;"></ion-icon>
+                                </span>
+                              </button>
+                            {% endif %}
+
+                        </form>
+                        <p>{{ post.liked.all.count }} likes</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            {% endfor %}
+
+
+        </div>
+        {% block content %}{% endblock %}
+
+        {% elif not invited and request_sent == False %}
+        <div class="row pt-1 mt-5">
+            <div class="col-sm-8 mycard">
+                <div class="post-topbar">
+                    <a class="post btn btn-primary" href="{%url 'group.sendRequestJoin' group.id%}">Rejoindre le groupe</a>
+                </div>
+
+            </div>
+        </div>
+        
+        {% elif request_sent == True %}
+        <div class="mycard my-4">
+            <div class="page-wrap d-flex flex-row align-items-center">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 text-center d-flex-column justify-content-center ">
+                            <!-- <span class="display-1 d-block">Unauthorized!</span> -->
+                            <div class="mb-4 lead ">Vous avez déjà envoyé une demande pour ce groupe</div>
+                            <a href="{% url 'cancel-request-join' group.id %}" style="width: 50%; margin-left: 25%;" class="btn post">Cancel Request</a>
+                            <a href="{% url 'group' %}" style="width: 50%; margin-left: 25%;" class="btn post">Retourner </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{%else%}
+
+<div class="row pt-1 mt-5">
+    <div class="col-sm-8 mycard">
+
+        <div class="post-topbar">
+
+            <a class="post btn btn-primary" href="{%url 'group.acceptInvitation' group.id%}">Accepter l'invitation</a>
+            <a class="post btn btn-secondary" href="{%url 'group.cancelInvitation' group.id%}">Refuser l'invitation</a>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+{%endif%}
+
+
+  <!--
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <script>
+    const likeButton = document.getElementById("likeButton");
+
+    let liked = false;
+
+    likeButton.addEventListener("click", () => {
+        if (liked) {
+            likeButton.innerHTML = '<ion-icon name="heart-outline" style="color: rgb(196, 21, 102); font-size: medium;"></ion-icon>';
+            liked = false;
+        } else {
+            likeButton.innerHTML = '<ion-icon name="heart" style="color: rgb(196, 21, 102); font-size: medium;"></ion-icon>';
+            liked = true;
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const posteModeleSelect = document.querySelector("#id_poste_modele");
+        const transportFields = document.querySelector("#transport-fields");
+        const logementFields = document.querySelector("#logement-fields");
+        const stageFields = document.querySelector("#stage-fields");
+        const evenementFields = document.querySelector("#evenement-fields");
+
+        posteModeleSelect.addEventListener("change", function() {
+            const selectedModele = posteModeleSelect.value;
+            transportFields.style.display = "none";
+            logementFields.style.display = "none";
+            stageFields.style.display = "none";
+            evenementFields.style.display = "none";
+
+            if (selectedModele === "transport") {
+                transportFields.style.display = "block";
+            } else if (selectedModele === "logement") {
+                logementFields.style.display = "block";
+            } else if (selectedModele === "stage") {
+                stageFields.style.display = "block";
+            } else if (selectedModele === "evenement") {
+                evenementFields.style.display = "block";
+            }
+        });
+    });
+</script>
+{%endblock%}
